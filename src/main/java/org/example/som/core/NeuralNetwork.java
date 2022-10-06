@@ -2,13 +2,13 @@ package org.example.som.core;
 
 public class NeuralNetwork {
 
-    public static final int NEURONS_NUMBER = 3;
-    public static int COUNT_TRAIN_ITERATIONS = 1000;
-    public static double N_DEFAULT = 0.5;
-    public static int COUNT_ATTRIBUTES_IN_VECTOR = 4;
+    private static final int NEURONS_NUMBER = 3;
+    private static final int COUNT_TRAIN_ITERATIONS = 1000;
+    private static final double N_DEFAULT = 0.5;
+    private static final int COUNT_ATTRIBUTES_IN_VECTOR = 4;
 
-    public Neuron[] neurons;
-    double[][] data;
+    private final Neuron[] neurons;
+    private final double[][] data;
 
     public NeuralNetwork(double[][] data) {
         neurons = new Neuron[NEURONS_NUMBER];
@@ -28,7 +28,7 @@ public class NeuralNetwork {
                     trainNeuronWTA(neurons[0], datum, n);
                 } else if (i > 49 && i < 100) {
                     trainNeuronWTA(neurons[1], datum, n);
-                } else if (i > 99 & i < 150) {
+                } else if (i > 99 && i < 150) {
                     trainNeuronWTA(neurons[2], datum, n);
                 }
             }
@@ -47,9 +47,10 @@ public class NeuralNetwork {
         return neuronWithMinDistance;
     }
 
+
     public void trainNeuronWTA(Neuron neuronWinner, double[] inputVector, double n) {
-        for (int w = 0; w < neuronWinner.arrayOfWeight.length; w++) {
-            neuronWinner.arrayOfWeight[w] = neuronWinner.arrayOfWeight[w] + n * (inputVector[w] - neuronWinner.arrayOfWeight[w]);
+        for (int w = 0; w < neuronWinner.getWeights().length; w++) {
+            neuronWinner.getWeights()[w] = neuronWinner.getWeights()[w] + n * (inputVector[w] - neuronWinner.getWeights()[w]);
         }
     }
 
