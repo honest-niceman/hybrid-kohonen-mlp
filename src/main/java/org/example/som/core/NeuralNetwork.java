@@ -1,7 +1,6 @@
 package org.example.som.core;
 
 public class NeuralNetwork {
-
     private static final int NEURONS_NUMBER = 3;
     private static final int COUNT_TRAIN_ITERATIONS = 1000;
     private static final double N_DEFAULT = 0.5;

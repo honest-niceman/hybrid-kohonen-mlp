@@ -1,9 +1,7 @@
-package org.example.som;
+package org.example.dataset;
 
-class Dataset {
-    private Dataset() {}
-
-    static double[][] data = new double[][]{
+public class IrisDataset {
+    private final double[][] data = new double[][]{
             {5.1, 3.5, 1.4, 0.2},
             {4.9, 3.0, 1.4, 0.2},
             {4.7, 3.2, 1.3, 0.2},
@@ -155,4 +153,8 @@ class Dataset {
             {6.2, 3.4, 5.4, 2.3},
             {5.9, 3.0, 5.1, 1.8},
     };
+
+    public double[][] getData() {
+        return this.data;
+    }
 }
