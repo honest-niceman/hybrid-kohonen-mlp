@@ -14,9 +14,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.example.mlp.core.activationfunctions.interfaces;
+package org.example.mlp.core.activationfunctions;
 
-public interface ActivationFunction {
-    double activate(double value);
-    double derivative(double value);
+public class SigmoidActivation {
+    public double activate(double value) {
+        return 1 / (1 + Math.pow(Math.E, -value));
+    }
+
+    public double derivative(double value) {
+        return (value - Math.pow(value, 2));
+    }
 }
+

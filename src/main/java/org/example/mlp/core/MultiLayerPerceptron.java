@@ -1,13 +1,13 @@
 package org.example.mlp.core;
 
-import org.example.mlp.core.activationfunctions.interfaces.ActivationFunction;
+import org.example.mlp.core.activationfunctions.SigmoidActivation;
 
 public class MultiLayerPerceptron {
     private final double learningRate;
-    private final ActivationFunction activationFunction;
+    private final SigmoidActivation activationFunction;
     private final Layer[] layers;
 
-    public MultiLayerPerceptron(int[] layers, double learningRate, ActivationFunction fun) {
+    public MultiLayerPerceptron(int[] layers, double learningRate, SigmoidActivation fun) {
         this.learningRate = learningRate;
         this.activationFunction = fun;
         this.layers = new Layer[layers.length];

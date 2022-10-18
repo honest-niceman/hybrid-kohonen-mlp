@@ -29,6 +29,10 @@ public class Neuron {
         return weights;
     }
 
+    public void setWeight(int idx, double weight) {
+        this.weights[idx] = weight;
+    }
+
     @Override
     public String toString() {
         return "Neuron{" +

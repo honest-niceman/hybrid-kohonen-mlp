@@ -1,18 +1,21 @@
 package org.example.som.core;
 
-public class NeuralNetwork {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Kohonen {
     private static final int NEURONS_NUMBER = 3;
     private static final int COUNT_TRAIN_ITERATIONS = 1000;
     private static final double N_DEFAULT = 0.5;
     private static final int COUNT_ATTRIBUTES_IN_VECTOR = 4;
 
-    private final Neuron[] neurons;
+    private final List<Neuron> neurons;
     private final double[][] data;
 
-    public NeuralNetwork(double[][] data) {
-        neurons = new Neuron[NEURONS_NUMBER];
+    public Kohonen(double[][] data) {
+        neurons = new ArrayList<>(NEURONS_NUMBER);
         for (int i = 0; i < NEURONS_NUMBER; i++) {
-            neurons[i] = new Neuron(COUNT_ATTRIBUTES_IN_VECTOR);
+            neurons.add(new Neuron(COUNT_ATTRIBUTES_IN_VECTOR));
         }
         this.data = normalizeData(data);
     }
@@ -24,23 +27,23 @@ public class NeuralNetwork {
             for (int i = 0; i < data.length; i++) {
                 double[] datum = data[i];
                 if (i < 50) {
-                    trainNeuronWTA(neurons[0], datum, n);
+                    trainNeuronWTA(neurons.get(0), datum, n);
                 } else if (i > 49 && i < 100) {
-                    trainNeuronWTA(neurons[1], datum, n);
+                    trainNeuronWTA(neurons.get(1), datum, n);
                 } else if (i > 99 && i < 150) {
-                    trainNeuronWTA(neurons[2], datum, n);
+                    trainNeuronWTA(neurons.get(2), datum, n);
                 }
             }
         }
     }
 
     private Neuron findNeuronWinnerWTA(double[] vector) {
-        Neuron neuronWithMinDistance = neurons[0];
+        Neuron neuronWithMinDistance = neurons.get(0);
         for (int i = 0; i < NEURONS_NUMBER; i++) {
             double winnerDistance = neuronWithMinDistance.calcDistanceBetweenNeuronAndInputVector(vector);
-            double iDistance = neurons[i].calcDistanceBetweenNeuronAndInputVector(vector);
+            double iDistance = neurons.get(i).calcDistanceBetweenNeuronAndInputVector(vector);
             if (winnerDistance > iDistance) {
-                neuronWithMinDistance = neurons[i];
+                neuronWithMinDistance = neurons.get(i);
             }
         }
         return neuronWithMinDistance;
@@ -49,7 +52,8 @@ public class NeuralNetwork {
 
     public void trainNeuronWTA(Neuron neuronWinner, double[] inputVector, double n) {
         for (int w = 0; w < neuronWinner.getWeights().length; w++) {
-            neuronWinner.getWeights()[w] = neuronWinner.getWeights()[w] + n * (inputVector[w] - neuronWinner.getWeights()[w]);
+            double newWeight = neuronWinner.getWeights()[w] + n * (inputVector[w] - neuronWinner.getWeights()[w]);
+            neuronWinner.setWeight(w, newWeight);
         }
     }
 
@@ -74,5 +78,13 @@ public class NeuralNetwork {
 
     public Neuron test(double[] vector) {
         return findNeuronWinnerWTA(vector);
+    }
+
+    public List<Neuron> getNeurons() {
+        return neurons;
+    }
+
+    public double[][] getData() {
+        return data;
     }
 }
