@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 public class Main {
     private static final Logger log = Logger.getLogger("Hybrid:Main---");
-    private static final Random r = new Random();
 
     public static void main(String[] args) {
         Kohonen kohonen = new Kohonen(new IrisDataset().getData());
@@ -20,8 +19,8 @@ public class Main {
 
         kohonen.trainWTA();
 
-        int[] layers = new int[]{3, 10, 3};
-        MultiLayerPerceptron mlp = new MultiLayerPerceptron(layers, 0.1, new SigmoidActivation());
+        int[] layers = new int[]{3, 6, 3};
+        MultiLayerPerceptron mlp = new MultiLayerPerceptron(layers, 0.45, new SigmoidActivation());
 
         double[][] dataAfterKohonen = new double[150][3];
 
@@ -104,7 +103,7 @@ public class Main {
         }
 
         for (int i = 0; i < 500; i++) {
-            for (int j = 0; j < 150; j++) {
+            for (int j = 0; j < 120; j++) {
                 double[] input = new double[3];
                 double[] output = new double[3];
                 input[0] = shuffledDataAfterKohonen[j][0];
@@ -120,7 +119,9 @@ public class Main {
         }
 
         /* Test */
-        for (double[] datum : shuffledDataAfterKohonen) {
+        for (int i = 0, shuffledDataAfterKohonenLength = shuffledDataAfterKohonen.length; i < shuffledDataAfterKohonenLength; i++) {
+            if (i > 30) break;
+            double[] datum = shuffledDataAfterKohonen[i];
             double[] toTest = new double[3];
             toTest[0] = datum[0];
             toTest[1] = datum[1];
@@ -129,10 +130,7 @@ public class Main {
             ideal[0] = datum[3];
             ideal[1] = datum[4];
             ideal[2] = datum[5];
-            String msg = Arrays.toString(mlp.execute(toTest));
-            String msg1 = Arrays.toString(ideal);
-            String message = msg + "–––" + msg1;
-            log.log(Level.INFO, message);
+            log.log(Level.INFO, Arrays.toString(mlp.execute(toTest)) + "---" + Arrays.toString(ideal));
         }
     }
 

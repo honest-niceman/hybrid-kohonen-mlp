@@ -4,7 +4,6 @@ import org.example.dataset.IrisDataset;
 import org.example.mlp.core.MultiLayerPerceptron;
 import org.example.mlp.core.activationfunctions.SigmoidActivation;
 
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,8 +11,8 @@ public class Main {
     private static final Logger log = Logger.getLogger("MLP:Main---");
 
     public static void main(String[] args) {
-        int[] layers = new int[]{4, 10, 3};
-        MultiLayerPerceptron mlp = new MultiLayerPerceptron(layers, 0.1, new SigmoidActivation());
+        int[] layers = new int[]{4, 7, 3};
+        MultiLayerPerceptron mlp = new MultiLayerPerceptron(layers, 0.5, new SigmoidActivation());
         /* Learn */
         double[][] data = new IrisDataset().getData();
         for (int i = 0; i < 500; i++) {
