@@ -35,8 +35,6 @@ public class Neuron {
 
     @Override
     public String toString() {
-        return "Neuron{" +
-                "arrayOfWeight=" + Arrays.toString(weights) +
-                '}';
+        return "Neuron " + Arrays.toString(weights).hashCode();
     }
 }

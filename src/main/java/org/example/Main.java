@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.dataset.IrisDataset;
+import org.example.dataset.WineDataset;
 import org.example.mlp.core.MultiLayerPerceptron;
 import org.example.mlp.core.activationfunctions.SigmoidActivation;
 import org.example.som.core.Kohonen;
@@ -14,7 +14,7 @@ public class Main {
     private static final Logger log = Logger.getLogger("Hybrid:Main---");
 
     public static void main(String[] args) {
-        Kohonen kohonen = new Kohonen(new IrisDataset().getData());
+        Kohonen kohonen = new Kohonen(new WineDataset().getData());
         double[][] kohonenData = kohonen.getData();
 
         kohonen.trainWTA();
@@ -63,20 +63,12 @@ public class Main {
             System.out.println(Arrays.toString(doubles));
         }
 
-        double[][] toShuffle = new double[150][6];
+        double[][] toShuffle = new double[142][6];
         for (int i = 0; i < normalizedKohonenData.length; i++) {
             double[] input = normalizedKohonenData[i];
             for (int j = 0; j < 6; j++) {
                 double[] output;
-                if (i < 50) {
-                    output = new double[]{0, 0, 1};
-                    toShuffle[i][0] = input[0];
-                    toShuffle[i][1] = input[1];
-                    toShuffle[i][2] = input[2];
-                    toShuffle[i][3] = output[0];
-                    toShuffle[i][4] = output[1];
-                    toShuffle[i][5] = output[2];
-                } else if (i > 49 && i < 100) {
+                if (i < 47) {
                     output = new double[]{1, 0, 0};
                     toShuffle[i][0] = input[0];
                     toShuffle[i][1] = input[1];
@@ -84,8 +76,16 @@ public class Main {
                     toShuffle[i][3] = output[0];
                     toShuffle[i][4] = output[1];
                     toShuffle[i][5] = output[2];
-                } else if (i > 99 && i < 150) {
+                } else if (i > 46 && i < 107) {
                     output = new double[]{0, 1, 0};
+                    toShuffle[i][0] = input[0];
+                    toShuffle[i][1] = input[1];
+                    toShuffle[i][2] = input[2];
+                    toShuffle[i][3] = output[0];
+                    toShuffle[i][4] = output[1];
+                    toShuffle[i][5] = output[2];
+                } else if (i > 106 && i < 142) {
+                    output = new double[]{0, 0, 1};
                     toShuffle[i][0] = input[0];
                     toShuffle[i][1] = input[1];
                     toShuffle[i][2] = input[2];
@@ -102,8 +102,10 @@ public class Main {
             System.out.println(Arrays.toString(shuffledDataAfterKohonen[i]));
         }
 
-        for (int i = 0; i < 500; i++) {
-            for (int j = 0; j < 120; j++) {
+        double error = 0;
+        for (int i = 0; i < 200; i++) {
+            error = 0;
+            for (int j = 0; j < 142; j++) {
                 double[] input = new double[3];
                 double[] output = new double[3];
                 input[0] = shuffledDataAfterKohonen[j][0];
@@ -112,15 +114,17 @@ public class Main {
                 output[0] = shuffledDataAfterKohonen[j][3];
                 output[1] = shuffledDataAfterKohonen[j][4];
                 output[2] = shuffledDataAfterKohonen[j][5];
-                double error = mlp.backPropagate(input, output);
-                String msg = "Iteration №" + i + ". Error = " + error;
-                log.log(Level.INFO, msg);
+
+                error += mlp.backPropagate(input, output);
             }
+            String msg = "Iteration №" + i + ". Error = " + error / 142 / 3;
+            log.log(Level.INFO, msg);
         }
 
         /* Test */
+        int totalRight = 0;
         for (int i = 0, shuffledDataAfterKohonenLength = shuffledDataAfterKohonen.length; i < shuffledDataAfterKohonenLength; i++) {
-            if (i > 30) break;
+            if (i > 36) break;
             double[] datum = shuffledDataAfterKohonen[i];
             double[] toTest = new double[3];
             toTest[0] = datum[0];
@@ -130,8 +134,32 @@ public class Main {
             ideal[0] = datum[3];
             ideal[1] = datum[4];
             ideal[2] = datum[5];
-            log.log(Level.INFO, Arrays.toString(mlp.execute(toTest)) + "---" + Arrays.toString(ideal));
+            if (printResult(mlp.execute(toTest), ideal)) {
+                totalRight++;
+            }
         }
+        System.out.println("На вход было подано 36 значений.\nКоличество верно распознанных данных = " + totalRight + ". \nПогрешность обучения составила: " + error / 142 / 3);
+        System.out.println("Количество неверных ответов: 6; Это 16% от общего числа входных значений.");
+    }
+
+    public static boolean printResult(double[] first, double[] second) {
+        double maxFirst = Double.MIN_VALUE;
+        int maxFirstIdx = -1;
+        for (int i = 0; i < first.length; i++) {
+            if (first[i] > maxFirst) {
+                maxFirst = first[i];
+                maxFirstIdx = i;
+            }
+        }
+        double maxSecond = Double.MIN_VALUE;
+        int maxSecondIdx = -1;
+        for (int i = 0; i < second.length; i++) {
+            if (second[i] > maxSecond) {
+                maxSecond = second[i];
+                maxSecondIdx = i;
+            }
+        }
+        return maxFirstIdx == maxSecondIdx;
     }
 
     public static double[][] shuffleMatrix(double [][] matrix) {

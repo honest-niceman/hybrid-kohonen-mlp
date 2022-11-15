@@ -7,7 +7,7 @@ public class Kohonen {
     private static final int NEURONS_NUMBER = 3;
     private static final int COUNT_TRAIN_ITERATIONS = 1000;
     private static final double N_DEFAULT = 0.5;
-    private static final int COUNT_ATTRIBUTES_IN_VECTOR = 4;
+    private static final int COUNT_ATTRIBUTES_IN_VECTOR = 13;
 
     private final List<Neuron> neurons;
     private final double[][] data;
@@ -26,11 +26,11 @@ public class Kohonen {
         for (int t = 0; t < COUNT_TRAIN_ITERATIONS; t++) {
             for (int i = 0; i < data.length; i++) {
                 double[] datum = data[i];
-                if (i < 50) {
+                if (i < 24 + 12) {
                     trainNeuronWTA(neurons.get(0), datum, n);
-                } else if (i > 49 && i < 100) {
+                } else if (i > 47 - 1 && i < 70 + 12) {
                     trainNeuronWTA(neurons.get(1), datum, n);
-                } else if (i > 99 && i < 150) {
+                } else if (i > 107 - 1 && i < 130 + 12) {
                     trainNeuronWTA(neurons.get(2), datum, n);
                 }
             }
